@@ -5,6 +5,8 @@
 
 enable-join-message: true
 join-message: '&7[&a+&7] &b%player% &3is online now'
+join-message-permissions: 'cjt.joinmessage'
 
-enable-leave-message: true
+enable-leave-message: false
 leave-message: '&7[&c-&7] &b%player% &3went offline'
+leave-message-permissions: 'cjt.leavemessage'
