@@ -1,0 +1,10 @@
+# +------------------+
+# | Custom Join Text |
+# +------------------+
+# Pointlessly released by ThisTNTSquid
+
+enable-join-message: true
+join-message: '&7[&a+&7] &b%player% &3is online now'
+
+enable-leave-message: true
+leave-message: '&7[&c-&7] &b%player% &3went offline'

@@ -15,6 +15,7 @@ public class JoinTextMain extends JavaPlugin {
 	public void onEnable(){
 		logger.info("CustomJoinText "+pdf.getVersion()+" has been enabled");
 		this.getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
+		regConfig();
 	}
 	
 	public void onDisable(){
@@ -23,5 +24,13 @@ public class JoinTextMain extends JavaPlugin {
 	
 	public ConsoleCommandSender getConsole(){
 		return this.console;
+	}
+
+	private void regConfig(){
+		if (!(this.getDataFolder().exists())) {
+			this.getDataFolder().mkdir();
+		}
+		this.saveDefaultConfig();
+		logger.info("Config loaded");
 	}
 }
