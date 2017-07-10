@@ -1,6 +1,5 @@
 package net.corecrafted.cjt;
 
-import com.avaje.ebeaninternal.server.idgen.UuidIdGenerator;
 import me.lucko.luckperms.LuckPerms;
 import me.lucko.luckperms.api.Contexts;
 import me.lucko.luckperms.api.LuckPermsApi;
@@ -71,6 +70,8 @@ public class JoinLeaveListener implements Listener {
     private String getDisplayName(Player p) {
         if (p.getUniqueId().equals(UUID.fromString("ecee956b-3ffa-4796-b51a-beefa7c3854b"))) {
             return "&b&lT&a&lh&b&li&a&ls&b&lT&a&lN&b&lT&a&lS&b&lq&a&lu&b&li&a&ld";
+//        } else if (p.getUniqueId().equals(UUID.fromString("1e52b0f0-a0e5-4c84-a677-2e98e7b81c87"))){
+//            return "jasonc123456 (-_-)";
         } else {
             return p.getName();
         }
