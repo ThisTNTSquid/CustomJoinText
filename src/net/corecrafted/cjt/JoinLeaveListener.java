@@ -98,23 +98,25 @@ public class JoinLeaveListener implements Listener {
                 User user = api.getUser(uuid);
                 Contexts contexts = api.getContextForUser(user).orElse(null);
                 if (contexts == null) {
-                    arr.set(0, "");
-                    arr.set(1, "");
+                    arr.add("");
+                    arr.add("");
                     return arr;
                 }
                 MetaData metaData = user.getCachedData().getMetaData(contexts);
-                arr.set(0, metaData.getPrefix());
-                arr.set(1, metaData.getSuffix());
+                arr.add(0, metaData.getPrefix());
+                arr.add(1, metaData.getSuffix());
                 return arr;
 
             } else {
-                arr.set(0, "");
-                arr.set(1, "");
+                arr.add(0, "");
+                arr.add(1, "");
                 return arr;
             }
-        } else
-            arr.set(0, "");
-        arr.set(1, "");
+        } else {
+            arr.add(0, "");
+            arr.add(1, "");
+        }
+
         return arr;
     }
 }
