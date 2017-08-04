@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -77,18 +78,19 @@ public class JoinLeaveListener implements Listener {
     }
 
     private void sendJoinMsg(PlayerJoinEvent e, String playerName) {
-        String message = ChatColor.translateAlternateColorCodes('&', config.getString("join-message").replaceAll("%player%", getPrefix(e.getPlayer().getUniqueId())+" "+playerName));
+        String message = ChatColor.translateAlternateColorCodes('&', config.getString("join-message").replaceAll("%player%", getPrefixSuffix(e.getPlayer().getUniqueId()).get(0) + " " + getPrefixSuffix(e.getPlayer().getUniqueId()).get(1) + playerName));
         e.setJoinMessage(message);
         plugin.getConsole().sendMessage(message);
     }
 
     private void sendLeaveMsg(PlayerQuitEvent e, String playerName) {
-        String message = ChatColor.translateAlternateColorCodes('&', config.getString("leave-message").replaceAll("%player%", getPrefix(e.getPlayer().getUniqueId())+" "+playerName));
+        String message = ChatColor.translateAlternateColorCodes('&', config.getString("leave-message").replaceAll("%player%", getPrefixSuffix(e.getPlayer().getUniqueId()).get(0) + " " + getPrefixSuffix(e.getPlayer().getUniqueId()).get(1) + playerName));
         e.setQuitMessage(message);
         plugin.getConsole().sendMessage(message);
     }
 
-    private String getPrefix(UUID uuid){
+    private ArrayList<String> getPrefixSuffix(UUID uuid) {
+        ArrayList<String> arr = new ArrayList<>();
         if (config.getBoolean("include-prefix")) {
             Optional<LuckPermsApi> provider = LuckPerms.getApiSafe();
             if (provider.isPresent()) {
@@ -96,15 +98,23 @@ public class JoinLeaveListener implements Listener {
                 User user = api.getUser(uuid);
                 Contexts contexts = api.getContextForUser(user).orElse(null);
                 if (contexts == null) {
-                    return "";
+                    arr.set(0, "");
+                    arr.set(1, "");
+                    return arr;
                 }
                 MetaData metaData = user.getCachedData().getMetaData(contexts);
-                return metaData.getPrefix();
+                arr.set(0, metaData.getPrefix());
+                arr.set(1, metaData.getSuffix());
+                return arr;
 
             } else {
-                return "";
+                arr.set(0, "");
+                arr.set(1, "");
+                return arr;
             }
         } else
-            return "";
+            arr.set(0, "");
+        arr.set(1, "");
+        return arr;
     }
 }
