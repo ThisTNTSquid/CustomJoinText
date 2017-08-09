@@ -1,6 +1,5 @@
 package net.corecrafted.cjt;
 
-import com.avaje.ebeaninternal.server.idgen.UuidIdGenerator;
 import me.lucko.luckperms.LuckPerms;
 import me.lucko.luckperms.api.Contexts;
 import me.lucko.luckperms.api.LuckPermsApi;
@@ -24,13 +23,13 @@ public class JoinLeaveListener implements Listener {
     JoinTextMain plugin;
     FileConfiguration config;
     String joinMsgPermissions;
-    String leaveMsgPermisisons;
+    String leaveMsgPermissions;
 
     public JoinLeaveListener(JoinTextMain plugin) {
         this.plugin = plugin;
         config = plugin.getConfig();
         joinMsgPermissions = config.getString("join-message-permissions");
-        leaveMsgPermisisons = config.getString("leave-message-permissions");
+        leaveMsgPermissions = config.getString("leave-message-permissions");
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -50,14 +49,18 @@ public class JoinLeaveListener implements Listener {
         } else
             e.setJoinMessage(null);
 
+        if (config.getBoolean("spawn-on-join")){
+            e.getPlayer().performCommand("spawn");
+        }
+
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent e) {
         if (config.getBoolean("enable-leave-message")) {
             String playerName = getDisplayName(e.getPlayer());
-            if (leaveMsgPermisisons != null) {
-                if (e.getPlayer().hasPermission(leaveMsgPermisisons)) {
+            if (leaveMsgPermissions != null) {
+                if (e.getPlayer().hasPermission(leaveMsgPermissions)) {
                     sendLeaveMsg(e, playerName);
                 } else
                     e.setQuitMessage(null);
@@ -78,13 +81,13 @@ public class JoinLeaveListener implements Listener {
     }
 
     private void sendJoinMsg(PlayerJoinEvent e, String playerName) {
-        String message = ChatColor.translateAlternateColorCodes('&', config.getString("join-message").replaceAll("%player%", getPrefixSuffix(e.getPlayer().getUniqueId()).get(0) + " " + getPrefixSuffix(e.getPlayer().getUniqueId()).get(1) + playerName));
+        String message = ChatColor.translateAlternateColorCodes('&', config.getString("join-message").replaceAll("%player%", getPrefixSuffix(e.getPlayer().getUniqueId()).get(0) + " &b" + playerName));
         e.setJoinMessage(message);
         plugin.getConsole().sendMessage(message);
     }
 
     private void sendLeaveMsg(PlayerQuitEvent e, String playerName) {
-        String message = ChatColor.translateAlternateColorCodes('&', config.getString("leave-message").replaceAll("%player%", getPrefixSuffix(e.getPlayer().getUniqueId()).get(0) + " " + getPrefixSuffix(e.getPlayer().getUniqueId()).get(1) + playerName));
+        String message = ChatColor.translateAlternateColorCodes('&', config.getString("leave-message").replaceAll("%player%", getPrefixSuffix(e.getPlayer().getUniqueId()).get(0) + " &b" + playerName));
         e.setQuitMessage(message);
         plugin.getConsole().sendMessage(message);
     }
@@ -99,7 +102,7 @@ public class JoinLeaveListener implements Listener {
                 Contexts contexts = api.getContextForUser(user).orElse(null);
                 if (contexts == null) {
                     arr.add("");
-                    arr.add("");
+                    arr.add("&7");
                     return arr;
                 }
                 MetaData metaData = user.getCachedData().getMetaData(contexts);
@@ -109,14 +112,13 @@ public class JoinLeaveListener implements Listener {
 
             } else {
                 arr.add(0, "");
-                arr.add(1, "");
+                arr.add(1, "&7");
                 return arr;
             }
         } else {
             arr.add(0, "");
-            arr.add(1, "");
+            arr.add(1, "&7");
+            return arr;
         }
-
-        return arr;
     }
 }
